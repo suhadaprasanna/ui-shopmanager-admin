@@ -1,0 +1,103 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+
+        <mat-tab-group (selectedTabChange)="tabChanged($event)">
+
+          <mat-tab label="Shop Details">
+            <ng-template matTabContent>
+              <div *ngIf="!isLoading else loading">
+                <table class="table table-sm" *ngIf="shop != null && shop != undefined else notfoundshop">
+                  <tr>
+                    <td colspan="3">
+                      <button backdropClass="float-right " mat-raised-button routerLink="/shop/update"
+                        [queryParams]="{shop_id:shop.id}">Edit</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Status</th>
+                    <td>:</td>
+                    <td>
+                      <span class="badge badge-success" *ngIf="shop.status=='Y'">Active</span>
+                      <span class="badge badge-secondary" *ngIf="shop.status=='N'">Deactive</span>
+                      <span class="badge badge-danger" *ngIf="shop.status=='C'">Cancled</span>
+                      <span class="badge badge-default"
+                        *ngIf="shop.status=='' || shop.status=='N/A' || shop.status==null || shop.status=='null' ">N/A</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Shop Code</th>
+                    <td>:</td>
+                    <td>{{shop.shop_code}}</td>
+                  </tr>
+                  <tr>
+                    <th>Shop Name</th>
+                    <td>:</td>
+                    <td>{{shop.shop_name}}</td>
+                  </tr>
+                  <tr>
+                    <th>Shop Register Number</th>
+                    <td>:</td>
+                    <td>{{shop.shop_register_number}}</td>
+                  </tr>
+                  <tr>
+                    <th>Shop Register Date</th>
+                    <td>:</td>
+                    <td>{{shop.shop_register_date}}</td>
+                  </tr>
+                </table>
+                <ng-template #notfoundshop>
+                  <span>Not found shop details.</span>
+                </ng-template>
+              </div>
+            </ng-template>
+          </mat-tab>
+
+          <mat-tab label="Employee">
+            <ng-template matTabContent>
+              <div *ngIf="!isLoading else loading">
+                <div *ngIf="shopEmployeeList != null && shopEmployeeList.length>0 else notfoundshopemployee">
+                  <table class="table table-sm">
+                    <tr>
+                      <th>Name</th>
+                      <th>NIC</th>
+                      <th>Gender</th>
+                      <th>Emp Type</th>
+                      <th>Status</th>
+                    </tr>
+                    <tr *ngFor="let semp of shopEmployeeList">
+                      <td>{{semp.user.person.first_name+" "+semp.user.person.last_name}}</td>
+                      <td>{{semp.user.person.nic}}</td>
+                      <td>{{(semp.user.person.gender=="m"?'Male':'Female')}}</td>
+                      <td>{{semp.employee_role.role_name}}</td>
+                      <td>{{(semp.status=='Y'?'Active':'Deactive')}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <ng-template #notfoundshopemployee>
+                <span>Not found shop employies</span>
+              </ng-template>
+            </ng-template>
+          </mat-tab>
+
+          <!-- <mat-tab label="Third">
+            <ng-template matTabContent>
+              Content 3 - Loaded:
+            </ng-template>
+          </mat-tab> -->
+
+        </mat-tab-group>
+
+
+        <ng-template #loading>
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+  </div>
+</div>

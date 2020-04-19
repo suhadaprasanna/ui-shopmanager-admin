@@ -1,0 +1,102 @@
+<div class="row">
+  <div class="col-12">
+
+    <div class="card">
+      <div class="card-body">.
+
+        <div class="input-group col-9">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Filter By</span>
+          </div>
+          <input type="text" [(ngModel)]="shopService.filterForm.shop_name" class="form-control"
+            placeholder="Shop Name">
+          <input type="text" [(ngModel)]="shopService.filterForm.shop_code" class="form-control"
+            placeholder="Shop Code">
+          <input type="number" [(ngModel)]="shopService.filterForm.count" class="form-control">
+          <select [(ngModel)]="shopService.filterForm.status" class="custom-select">
+            <option value="ALL">All</option>
+            <option value="Y">Enabled</option>
+            <option value="N">Disadled</option>
+          </select>
+          <button type="button" class="btn btn-outline-primary" (click)="getShopList()">
+            <fa-icon [icon]="icon_faRedo"></fa-icon>
+          </button>
+        </div>
+
+        &nbsp;
+
+        <div *ngIf="shopList != null || shopList != undefined ; else loading">
+          <div *ngIf="shopList.length > 0; else notfounditems">
+
+            <table class="table">
+              <tr>
+                <th>{{commonService.label_list.shop_code}}</th>
+                <th>{{commonService.label_list.shop_name}}</th>
+                <th>{{commonService.label_list.status}}</th>
+                <th>{{commonService.label_list.action}}</th>
+              </tr>
+              <tr *ngFor="let shop of shopList">
+                <td>{{shop.shop_code}}</td>
+                <td>
+                  {{shop.shop_name}}
+                </td>
+                <td>
+                  <span
+                    [ngClass]="{'badge badge-pill':true, 'badge-success':shop.status=='Y', 'badge-secondary':(shop.status=='N'||shop.status=='')}">{{shop.status=="Y"?"Enale":shop.status=="N"?"Disable":"N/A"}}</span>
+                </td>
+                <td>
+                  <button mat-raised-button routerLink="/shop/update"
+                    [queryParams]="{shop_id:shop.id,person_id:shop.user.person_id}">{{commonService.label_list.edit}}</button>
+                  <button mat-raised-button routerLink="/shop/view"
+                    [queryParams]="{shop_id:shop.id}">{{commonService.label_list.view}}</button>
+                  &nbsp;
+                  <span class="custom-control custom-switch d-inline" data-toggle="tooltip" data-placement="top"
+                    title=" Shop enable or disable">
+                    <input type="checkbox" [checked]="shop.status=='Y'" class="custom-control-input"
+                      id="customSwitch{{shop.id}}" (click)="shopEnableDisable($event,shop.shop_code)">
+                    <label class="custom-control-label" for="customSwitch{{shop.id}}"></label>
+                  </span>
+                </td>
+              </tr>
+            </table>
+
+            <!-- start pagination-->
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-end">
+                <li class="page-item" (click)="shopService.filterForm.previous(); getShopList();">
+                  <a class="page-link" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+
+                <ng-container *ngFor="let item of [].constructor(shopService.filterForm.page_count); let i = index">
+                  <li [ngClass]="{'page-item':true,'active':((i+1)==shopService.filterForm.page)}"
+                    (click)="shopService.filterForm.setPage(i+1); getShopList();">
+                    <a class="page-link">{{i+1}}</a>
+                  </li>
+                </ng-container>
+
+                <li class="page-item" (click)="shopService.filterForm.next(); getShopList();">
+                  <a class="page-link" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            <!-- end pagination-->
+          </div>
+          <ng-template #notfounditems>
+            <span>Not found any items</span>
+          </ng-template>
+
+        </div>
+        <ng-template #loading>
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+  </div>
+</div>

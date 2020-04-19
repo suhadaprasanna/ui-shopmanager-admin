@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body shadow ">
+        <div class="row">
+          <div class="col-6">
+            <div class="p-1 border border-primary rounded">
+              <form [formGroup]="employeeRoleService.form">
+                <input type="hidden" name="id">
+                <input type="hidden" name="status">
+                <div>
+                  <mat-form-field>
+                    <input matInput placeholder="{{commonService.label_list.role_name}}" formControlName="role_name">
+                    <mat-error *ngIf="employeeRoleService.form.controls.role_name.hasError('required')">
+                      Please enter a role name
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <mat-form-field>
+                    <input matInput placeholder="{{commonService.label_list.role_code}}" formControlName="role_code">
+                    <mat-error *ngIf="employeeRoleService.form.controls.role_code.hasError('required')">
+                      Please enter a role code
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <button (click)="add()" mat-stroked-button>{{commonService.label_list.add_role}}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-1 border border-primary rounded">
+              <table
+                *ngIf="employeeRoles != undefined && employeeRoles != null && employeeRoles.length>0 else noemproles"
+                class="table table-sm">
+                <tr>
+                  <th>{{commonService.label_list.role_name}}</th>
+                  <th>{{commonService.label_list.role_code}}</th>
+                  <th>{{commonService.label_list.status}}</th>
+                  <th> </th>
+                </tr>
+                <tr *ngFor="let emp of employeeRoles">
+                  <td>{{emp.role_name}}</td>
+                  <td>{{emp.role_code}}</td>
+                  <td>{{emp.status=="Y"?'Active':emp.status=="N"?'Deactive':emp.status=="C"?'Canceled':'N/A'}}</td>
+                  <td>
+                    <button (click)="delete()" mat-stroked-button
+                      color="warn">{{commonService.label_list.delete}}</button>
+                  </td>
+                </tr>
+              </table>
+              <ng-template #noemproles>
+                <span>{{commonService.label_list.not_found}}</span>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

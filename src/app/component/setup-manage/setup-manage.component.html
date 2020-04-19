@@ -1,0 +1,24 @@
+<app-top-bar></app-top-bar>
+<div class="container-fluid" style="padding-top:60px;">
+  <div class="row">
+    <div class="col-3">
+      <ul class="shadow  list-group shadow">
+        <li class="list-group-item"><a routerLink="">
+            <fa-icon [icon]="icon_faAngleLeft"></fa-icon> {{commonService.label_list.home}}
+          </a></li>
+        <li class="list-group-item"><a routerLink="/setup/emprole">{{commonService.label_list.employee_role}} <fa-icon
+              [icon]="icon_faAngleRight"></fa-icon></a></li>
+      </ul>
+    </div>
+    <div class="col-9">
+      <div class="card">
+        <div class="card-body">
+          <h5>{{commonService.label_list.setup_manage}}</h5>
+        </div>
+      </div>
+
+      <router-outlet></router-outlet>
+
+    </div>
+  </div>
+</div>

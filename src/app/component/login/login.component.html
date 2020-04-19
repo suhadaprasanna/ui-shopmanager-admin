@@ -1,0 +1,25 @@
+<div class="container-fluid" style="padding-top:60px;">
+  <div class="row justify-content-center">
+    <div class="col-8 col-sm-8 col-md-6 col-lg-4 align-self-center">
+      <mat-card style="overflow: auto">
+        <form [formGroup]="authService.form">
+          <mat-form-field class="mat-form-field full">
+            <input matInput placeholder="Username" formControlName="username">
+            <mat-error *ngIf="authService.form.controls.username.hasError('required')">
+              Please enter username
+            </mat-error>
+          </mat-form-field>
+          <br>
+          <mat-form-field class="mat-form-field full">
+            <input type="password" matInput placeholder="Password" formControlName="password">
+            <mat-error *ngIf="authService.form.controls.password.hasError('required')">
+              Please enter a password
+            </mat-error>
+          </mat-form-field>
+          <br>
+          <button mat-raised-button class="float-right" color="primary" [disabled]="authService.isProcessing" (click)="login()">Login</button>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</div>

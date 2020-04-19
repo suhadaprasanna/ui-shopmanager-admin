@@ -1,0 +1,113 @@
+<div class="row">
+  <div class="col-12">
+
+    <div class="row">
+      <div class="col-12 ">
+
+        <div class="card" style="width: 50rem;">
+          <div class="card-body">
+            <!-- start item filter list-->
+            <div class="input-group col-9">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Filter By</span>
+              </div>
+              <input type="text" [(ngModel)]="itemService.filterForm.name" class="form-control" placeholder="Name">
+              <input type="text" [(ngModel)]="itemService.filterForm.code" class="form-control" placeholder="Code">
+              <input type="text" [(ngModel)]="itemService.filterForm.barcode" class="form-control"
+                placeholder="Barcode">
+              <input type="number" [(ngModel)]="itemService.filterForm.count" class="form-control">
+              <select [(ngModel)]="itemService.filterForm.status" class="custom-select">
+                <option value="ALL">All</option>
+                <option value="Y">Enabled</option>
+                <option value="N">Disadled</option>
+              </select>
+              <button type="button" class="btn btn-outline-primary" (click)="getItems()">
+                <fa-icon [icon]="icon_faRedo"></fa-icon>
+              </button>
+            </div>
+            <!-- end item filter list-->
+            &nbsp;
+
+            <div *ngIf="itemList != null && itemList != undefined; else loading">
+              <div *ngIf="itemList.length>0; else notfounditems">
+                <!-- start item data list-->
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>{{commonService.label_list.item_name}}</th>
+                      <th>{{commonService.label_list.item_code}}</th>
+                      <th>{{commonService.label_list.barcode}}</th>
+                      <th>{{commonService.label_list.date}}</th>
+                      <th>{{commonService.label_list.status}}</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of itemList">
+                      <td>{{item.name}}</td>
+                      <td>{{item.code}}</td>
+                      <td>{{item.barcode}}</td>
+                      <td>{{item.sys_add_date}}</td>
+                      <td>
+                        <span
+                          [ngClass]="{'badge badge-pill':true, 'badge-success':item.status=='Y', 'badge-secondary':(item.status=='N'||item.status=='')}">{{item.status=="Y"?"Enale":item.status=="N"?"Disable":"N/A"}}</span>
+                      </td>
+                      <td>
+                        <button routerLink="/item/add" [queryParams]="{item_id:item.id,item_code:item.code}"
+                          mat-raised-button>{{commonService.label_list.edit}}</button>
+                        &nbsp;
+                        <span class="custom-control custom-switch d-inline" data-toggle="tooltip" data-placement="top"
+                          title=" Item enable or disable">
+                          <input type="checkbox" [checked]="item.status=='Y'" class="custom-control-input"
+                            id="customSwitch{{item.id}}" (click)="itemEnableDisable($event,item.code)">
+                          <label class="custom-control-label" for="customSwitch{{item.id}}"></label>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- end item data list-->
+                <!-- start pagination-->
+                <nav aria-label="Page navigation">
+                  <ul class="pagination justify-content-end">
+                    <li class="page-item" (click)="itemService.filterForm.previous(); getItems();">
+                      <a class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+
+                    <ng-container *ngFor="let item of [].constructor(itemService.filterForm.page_count); let i = index">
+                      <li [ngClass]="{'page-item':true,'active':((i+1)==itemService.filterForm.page)}"
+                        (click)="itemService.filterForm.setPage(i+1); getItems();">
+                        <a class="page-link">{{i+1}}</a>
+                      </li>
+                    </ng-container>
+
+                    <li class="page-item" (click)="itemService.filterForm.next(); getItems();">
+                      <a class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+                <!-- end pagination-->
+              </div>
+
+              <ng-template #notfounditems>
+                <span>Not found any items</span>
+              </ng-template>
+
+            </div>
+            <ng-template #loading>
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

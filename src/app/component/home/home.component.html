@@ -1,0 +1,30 @@
+<app-top-bar></app-top-bar>
+<div class="container-fluid" style="padding-top:60px;">
+  <div class="row">
+    <div class="col-3">
+      <ul class="list-group shadow-sm">
+        <li class="list-group-item"><a routerLink="/shop">{{commonService.label_list.shop_manage}} <fa-icon
+              [icon]="icon_faAngleRight"></fa-icon></a>
+        </li>
+        <li class="list-group-item"><a routerLink="/person">{{commonService.label_list.person_manage}} <fa-icon
+              [icon]="icon_faAngleRight"></fa-icon>
+          </a></li>
+        <li class="list-group-item"><a routerLink="/item">{{commonService.label_list.item_manage}} <fa-icon
+              [icon]="icon_faAngleRight"></fa-icon>
+          </a></li>
+        <li class="list-group-item"><a routerLink="/register">{{commonService.label_list.register}} <fa-icon
+              [icon]="icon_faAngleRight"></fa-icon></a>
+        </li>
+        <li class="list-group-item"><a routerLink="/setup">{{commonService.label_list.setup}} <fa-icon
+              [icon]="icon_faAngleRight"></fa-icon></a></li>
+      </ul>
+    </div>
+    <div class="col-9">
+      <div class="card">
+        <div class="card-body">
+          <h5>{{commonService.label_list.dashboard}}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

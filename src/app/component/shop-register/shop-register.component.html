@@ -1,0 +1,179 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card" style="width: 50rem;">
+      <div class="card-body">
+
+        <form [formGroup]="shopService.form" autocomplete="false">
+
+          <div *ngIf="shopService.shop.id == undefined || shopService.shop.id == null || shopService.shop.id==0 else formupdatelbl">
+            <h5>{{commonService.label_list.shop_register_form}}</h5>
+          </div>
+          <ng-template #formupdatelbl>
+            <div>
+              <h5>{{commonService.label_list.shop_update_form}}</h5>
+            </div>
+          </ng-template>
+
+          <input type="hidden" formControlName="id">
+          <input type="hidden" formControlName="status">
+          <input type="hidden" formControlName="person_id">
+          <input type="hidden" formControlName="shop_code">
+          <input type="hidden" formControlName="employee_role_code">
+
+          <div class="row border p-4">
+            <div class="col-12">
+              <h6>{{commonService.label_list.user_details}}</h6>
+            </div>
+            <div class="col-6">
+              <div>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.nic}}" formControlName="person_nic"
+                    [matAutocomplete]="personnic" (keyup)="personAutoComplete($event)">
+                  <mat-autocomplete #personnic="matAutocomplete">
+                    <mat-option *ngFor="let person of personList" [value]="person.nic"
+                      (click)="setSelectedPerson(person)">
+                      {{person.nic}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.first_name}}"
+                    formControlName="person_first_name">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.last_name}}"
+                    formControlName="person_last_name">
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.register_date}}"
+                    [matDatepicker]="personRegisterDate" formControlName="person_register_date">
+                  <mat-datepicker-toggle matSuffix [for]="personRegisterDate"></mat-datepicker-toggle>
+                  <mat-datepicker #personRegisterDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.username}}" formControlName="username">
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field>
+                  <input matInput type="password" placeholder="{{commonService.label_list.password}}" formControlName="password">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-6">
+              <table class="table table-sm">
+                <tr>
+                  <td>{{commonService.label_list.name}} :</td>
+                  <td>{{(person != null && person != "" ? person.first_name+" "+person.last_name : "N/A")}}</td>
+                </tr>
+                <tr>
+                  <td>{{commonService.label_list.nic}} :</td>
+                  <td>{{(person != null && person != "" ? person.nic : "N/A")}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <br>
+          <div class="row border p-4">
+            <div class="col-12">
+              <h6>{{commonService.label_list.shop_details}}</h6>
+              <div>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.shop_name}}" formControlName="shop_name">
+                </mat-form-field>
+              </div>
+
+              <div>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.shop_register_number}}"
+                    formControlName="shop_register_number">
+                </mat-form-field>
+              </div>
+
+              <div>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.shop_register_date}}"
+                    [matDatepicker]="shopRegisterDate" formControlName="shop_register_date">
+                  <mat-datepicker-toggle matSuffix [for]="shopRegisterDate"></mat-datepicker-toggle>
+                  <mat-datepicker #shopRegisterDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.address}}" formControlName="addressl1">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.line}} 2" formControlName="addressl2">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="{{commonService.label_list.line}} 3" formControlName="addressl3">
+                </mat-form-field>
+              </div>
+
+              <div>
+                <div>
+                  <fa-icon [icon]="icon_faPlusCircle" data-toggle="tooltip" data-placement="top" title="Add Email"
+                    class="" style="color:rgb(100, 228, 107)" (click)="shopService.addEmailToForm()">
+                  </fa-icon>
+                </div>
+                <div formArrayName="emails"
+                  *ngFor="let group of shopService.getEmailsFromForm().controls; let i=index;">
+                  <div class="" [formGroupName]="i">
+                    <fa-icon [icon]="icon_faMinusCircle" *ngIf="shopService.form.get('emails').length>1"
+                      class="float-right " style="color:rgb(238, 121, 121)" (click)="shopService.removeEmailFromForm(i)"
+                      data-toggle="tooltip" data-placement="top" title="Remove email"></fa-icon>
+                    <mat-form-field>
+                      <input matInput placeholder="{{commonService.label_list.email}}" formControlName="email">
+                      <mat-error *ngIf="shopService.form.controls.email.hasError('email')">
+                        {{commonService.label_list.please_enter_valid_name}}
+                      </mat-error>
+                    </mat-form-field>
+                    <input type="hidden" formControlName="status">
+                    <input type="hidden" formControlName="id">
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div>
+                  <fa-icon [icon]="icon_faPlusCircle" data-toggle="tooltip" data-placement="top" title="Add Contact"
+                    class="" style="color:rgb(100, 228, 107)" (click)="shopService.addContactToForm()">
+                  </fa-icon>
+                </div>
+                <div formArrayName="contacts"
+                  *ngFor="let group of shopService.getContactsFromForm().controls; let i=index;">
+                  <div class=" " [formGroupName]="i">
+                    <fa-icon [icon]="icon_faMinusCircle" *ngIf="shopService.form.get('contacts').length>1"
+                      class="float-right " style="color:rgb(238, 121, 121)"
+                      (click)="shopService.removeContactFromForm(i)" data-toggle="tooltip" data-placement="top"
+                      title="Remove email"></fa-icon>
+                    <mat-form-field>
+                      <input matInput placeholder="{{commonService.label_list.contact_number}}"
+                        formControlName="number">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                *ngIf="shopService.shop.id == undefined || shopService.shop.id == null || shopService.shop.id==0 else updatebutton"
+                mat-stroked-button (click)="submit()">{{commonService.label_list.register}}</button>
+              <ng-template #updatebutton>
+                <button (click)="update()" mat-stroked-button>{{commonService.label_list.update}}</button>
+              </ng-template>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

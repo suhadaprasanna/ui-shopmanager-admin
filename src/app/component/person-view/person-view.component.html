@@ -1,0 +1,123 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12">
+            <span class="float-left">
+              <button mat-mini-fab color="white" (click)="goBack()" matTooltip="Click to go back">
+                <fa-icon [icon]="icon_faArrowLeft"></fa-icon>
+              </button>
+            </span>
+            <div *ngIf="!isLoading else loading">
+              <ng-container *ngIf="person != null && person != undefined && person != '' else notfoundperson">
+                <span class="float-right">
+                  <button mat-raised-button routerLink="/person/update" [queryParams]="{person_id:person.id}"
+                    matTooltip="Click to edit details">{{commonService.label_list.edit}}</button>
+                </span>
+                <br>
+                <br>
+                <table class="table table-sm">
+
+                  <tr>
+                    <th>{{commonService.label_list.status}}</th>
+                    <td>:</td>
+                    <td>
+                      <span class="badge badge-success" *ngIf="person.status=='Y'">{{commonService.label_list.active}}</span>
+                      <span class="badge badge-secondary" *ngIf="person.status=='N'">{{commonService.label_list.deactive}}</span>
+                      <span class="badge badge-danger" *ngIf="person.status=='C'">{{commonService.label_list.canceled}}</span>
+                      <span class="badge badge-default"
+                        *ngIf="person.status=='' || person.status=='N/A' || person.status==null || person.status=='null' ">{{commonService.label_list.na}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>{{commonService.label_list.name}}</th>
+                    <td>:</td>
+                    <td>
+                      {{(person.sur_name != null && person.sur_name !=""?person.sur_name+" ":"" )+person.first_name+" "+(person.middle_name != null && person.middle_name !=""?person.middle_name:"" )+" "+person.last_name}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>{{commonService.label_list.nic}}</th>
+                    <td>:</td>
+                    <td>{{person.nic}}</td>
+                  </tr>
+                  <tr>
+                    <th>{{commonService.label_list.gender}}</th>
+                    <td>:</td>
+                    <td>{{(person.gender=='m'?'Male':'Female')}}</td>
+                  </tr>
+                  <tr>
+                    <th>{{commonService.label_list.date_of_birth}}</th>
+                    <td>:</td>
+                    <td>{{person.birth_day==undefined || person.birth_day=="" ? "N/A" :person.birth_day}}</td>
+                  </tr>
+                  <tr>
+                    <th>{{commonService.label_list.contacts}}</th>
+                    <td>:</td>
+                    <td>
+                      <ng-container *ngIf="person.contacts != undefined && 
+                    person.contacts != null && 
+                    person.contacts.length > 0 else notavailable">
+                        <div *ngFor="let contact of person.contacts">
+                          <span>{{contact.number}}</span>
+                        </div>
+                      </ng-container>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>{{commonService.label_list.emails}}</th>
+                    <td>:</td>
+                    <td>
+                      <ng-container *ngIf="person.emails != undefined && 
+                      person.emails != null && 
+                      person.emails.length > 0 else notavailable">
+                        <div *ngFor="let email of person.emails">
+                          <span [ngClass]="{'lbl-default':(email.status!='Y')}">{{email.email}}</span>
+                        </div>
+                      </ng-container>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>{{commonService.label_list.addresses}}</th>
+                    <td>:</td>
+                    <td>
+                      <ng-container *ngIf="person.addresses != undefined && 
+                      person.addresses != null && 
+                      person.addresses.length > 0 else notavailable">
+                        <div *ngFor="let address of person.addresses">
+                          <div>{{address.addressl1}}</div>
+                          <div>{{address.addressl2}}</div>
+                          <div>{{address.addressl3}}</div>
+                          <div>{{address.addressl4}}</div>
+                          <br>
+                        </div>
+                      </ng-container>
+                    </td>
+                  </tr>
+
+                </table>
+              </ng-container>
+
+              <ng-template #notfoundperson>
+                <span>Not found person details.</span>
+              </ng-template>
+
+            </div>
+
+            <ng-template #loading>
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #notavailable>
+  <span>{{commonService.label_list.na}}</span>
+</ng-template>

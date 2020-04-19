@@ -1,0 +1,30 @@
+<app-top-bar></app-top-bar>
+<div class="container-fluid" style="padding-top:60px;">
+  <div class="row">
+    <div class="col-3">
+      <ul class="list-group">
+        <li class="list-group-item"><a routerLink="">
+            <fa-icon [icon]="icon_faAngleLeft"></fa-icon> {{commonService.label_list.home}}
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a routerLink="/shop/list">
+            {{commonService.label_list.shop}} {{commonService.label_list.list}}
+            <fa-icon [icon]="icon_faAngleRight"></fa-icon>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="col-9">
+      <div class="card">
+        <div class="card-body">
+          <h5>{{commonService.label_list.shop_manage}}</h5>
+        </div>
+      </div>
+
+      <router-outlet></router-outlet>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+
+        <div *ngIf="httpConnection.isConnectionError else view">
+          {{httpConnection.data.status}}
+          {{httpConnection.data.reason}}
+        </div>
+        <ng-template #view>
+          <div *ngIf="userList == null || userList.length < 0 else list" class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+
+          <ng-template #list>
+            <table class="table">
+              <tr>
+                <th>{{commonService.label_list.nic}}</th>
+                <th>{{commonService.label_list.name}}</th>
+                <th>{{commonService.label_list.gender}}</th>
+                <th></th>
+              </tr>
+              <tr *ngFor="let user of userList">
+                <td>{{user.person.nic}}</td>
+                <td>
+                  {{(user.person.sur_name != null && user.person.sur_name !=""?user.person.sur_name+" ":"" )+user.person.first_name+" "+(user.person.middle_name != null && user.person.middle_name !=""?user.person.middle_name:"" )+" "+user.person.last_name}}
+                </td>
+                <td>{{(user.person.gender=='m'?'Male':'Female')}}</td>
+                <td>{{(user.status=='Y'?'Active':'Deactive')}}</td>
+                <td>
+                  <button mat-raised-button routerLink="/person/update"
+                    [queryParams]="{person_id:user.person.id}">{{commonService.label_list.edit}}</button>
+                  <button mat-raised-button routerLink="/person/view"
+                    [queryParams]="{person_id:user.person.id}">{{commonService.label_list.view}}</button>
+                </td>
+              </tr>
+            </table>
+          </ng-template>
+        </ng-template>
+
+      </div>
+    </div>
+  </div>
+</div>

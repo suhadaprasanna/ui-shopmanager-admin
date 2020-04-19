@@ -1,0 +1,88 @@
+<div class="row">
+  <div class="col-12">
+
+    <div class="row">
+
+      <div class="col-6">
+        <div class="card">
+          <div class="card-body">
+            <form [formGroup]="itemService.form" autocomplete="false">
+              <mat-form-field>
+                <input #itemname matInput placeholder="{{commonService.label_list.item_name}}" formControlName="name">
+                <mat-error *ngIf="itemService.form.controls['name'].errors?.required">
+                  {{commonService.label_list.item_name}} <strong>{{commonService.label_list.required}}</strong>
+                </mat-error>
+                <mat-error *ngIf="itemService.form.controls['name'].errors?.isItemNameExist">
+                  {{commonService.label_list.item_name}} <strong>{{commonService.label_list.already_exist}}</strong>
+                </mat-error>
+              </mat-form-field>
+              <br>
+              <mat-form-field>
+                <input #itemcode matInput placeholder="{{commonService.label_list.item_code}}" formControlName="code">
+                <mat-error *ngIf="itemService.form.controls['code'].errors?.required">
+                  {{commonService.label_list.item_code}} <strong>{{commonService.label_list.required}}</strong>
+                </mat-error>
+                <mat-error *ngIf="itemService.form.controls['code'].errors?.isItemCodeExist">
+                  {{commonService.label_list.item_code}} <strong>{{commonService.label_list.already_exist}}</strong>
+                </mat-error>
+              </mat-form-field>
+              <br>
+              <mat-form-field>
+                <input matInput placeholder="{{commonService.label_list.barcode}}" formControlName="barcode">
+              </mat-form-field>
+
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFile" formControlName="image_path"
+                  (change)="itemService.onFileChange($event)">
+                <label class="custom-file-label" for="customFile">Choose Image</label>
+              </div>
+              <br><br>
+              <div style="overflow: auto;">
+                <button *ngIf="itemService.item.id==null || itemService.item.id==undefined || itemService.item.id==0; else updatebutton" (click)="add()"
+                  [disabled]="itemService.isProcessing" mat-raised-button
+                  color="primary">{{commonService.label_list.add}}</button>
+                <ng-template #updatebutton>
+                  <button (click)="update()" [disabled]="itemService.isProcessing" mat-raised-button
+                    color="primary">{{commonService.label_list.update}}</button>
+                </ng-template>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+
+        <div class="card" *ngIf="newItemList.length>0">
+          <div class="card-body">
+
+            <table *ngIf="newItemList.length>0" class="table table-sm">
+              <thead>
+                <th>{{commonService.label_list.item_name}}</th>
+                <th>{{commonService.label_list.item_code}}</th>
+                <th>{{commonService.label_list.barcode}}</th>
+                <th>{{commonService.label_list.status}}</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of newItemList">
+                  <td>{{item.name}}</td>
+                  <td>{{item.code}}</td>
+                  <td>{{item.barcode}}</td>
+                  <td>
+                    <span
+                      [ngClass]="{'badge badge-pill':true, 'badge-success':item.status=='Y', 'badge-secondary':item.status=='N'}">{{item.status=="Y"?"Enale":"Disable"}}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

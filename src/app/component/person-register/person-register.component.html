@@ -1,0 +1,136 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card" style="width: 50rem;">
+      <div class="card-body">
+        <div>
+          <h5 *ngIf="personService.person.id == undefined || personService.person.id==0 else updatelable">
+            {{commonService.label_list.person_register_form}}</h5>
+          <ng-template #updatelable>
+            <h5>{{commonService.label_list.person_update_form}}</h5>
+          </ng-template>
+        </div>
+
+        <form [formGroup]="personService.form">
+          <input type="hidden" formControlName="id">
+          <input type="hidden" formControlName="status">
+          <mat-form-field>
+            <input matInput placeholder="First Name" formControlName="first_name">
+            <mat-error *ngIf="personService.form.controls.first_name.hasError('required')">
+              Please enter a first name
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Last Name" formControlName="last_name">
+            <mat-error *ngIf="personService.form.controls.last_name.hasError('required')">
+              Please enter a last name
+            </mat-error>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="Sur Name" formControlName="sur_name">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Middle Name" formControlName="middle_name">
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="NIC" formControlName="nic">
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <mat-select placeholder="Gender" formControlName="gender">
+              <mat-option value="m">Male</mat-option>
+              <mat-option value="f">Female</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="Date of Birth" [matDatepicker]="dateOfBirth" formControlName="birth_day">
+            <mat-datepicker-toggle matSuffix [for]="dateOfBirth"></mat-datepicker-toggle>
+            <mat-datepicker #dateOfBirth></mat-datepicker>
+          </mat-form-field>
+
+          <div>
+            <div>
+              <fa-icon [icon]="icon_faPlusCircle" data-toggle="tooltip" data-placement="top" title="Add Address"
+                class="" style="color:rgb(100, 228, 107)" (click)="personService.addAddressToForm()">
+              </fa-icon>
+            </div>
+            <div formArrayName="addresses"
+              *ngFor="let group of personService.getAddressesFromForm().controls; let i = index;">
+              <div class=" " [formGroupName]="i">
+                <fa-icon [icon]="icon_faMinusCircle" *ngIf="personService.form.get('addresses').length>1"
+                  class="float-right " style="color:rgb(238, 121, 121)" (click)="personService.removeAddressFromForm(i)"
+                  data-toggle="tooltip" data-placement="top" title="Remove address"></fa-icon>
+                <mat-form-field>
+                  <input matInput placeholder="Address" formControlName="addressl1">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="line 2" formControlName="addressl2">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="line 3" formControlName="addressl3">
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="line 4" formControlName="addressl4">
+                </mat-form-field>
+                <input type="hidden" formControlName="status">
+                <input type="hidden" formControlName="id">
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <fa-icon [icon]="icon_faPlusCircle" data-toggle="tooltip" data-placement="top" title="Add Email" class=""
+                style="color:rgb(100, 228, 107)" (click)="personService.addEmailToForm()">
+              </fa-icon>
+            </div>
+            <div formArrayName="emails" *ngFor="let group of personService.getEmailsFromForm().controls; let i=index;">
+              <div class="" [formGroupName]="i">
+                <fa-icon [icon]="icon_faMinusCircle" *ngIf="personService.form.get('emails').length>1"
+                  class="float-right " style="color:rgb(238, 121, 121)" (click)="personService.removeEmailFromForm(i)"
+                  data-toggle="tooltip" data-placement="top" title="Remove email"></fa-icon>
+                <mat-form-field>
+                  <input matInput placeholder="Email" formControlName="email">
+                  <mat-error *ngIf="personService.form.controls.email.hasError('email')">
+                    Please enter a valid email
+                  </mat-error>
+                </mat-form-field>
+                <input type="hidden" formControlName="status">
+                <input type="hidden" formControlName="id">
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <fa-icon [icon]="icon_faPlusCircle" data-toggle="tooltip" data-placement="top" title="Add Contact"
+                class="" style="color:rgb(100, 228, 107)" (click)="personService.addContactToForm()">
+              </fa-icon>
+            </div>
+            <div formArrayName="contacts"
+              *ngFor="let group of personService.getContactsFromForm().controls; let i=index;">
+              <div class=" " [formGroupName]="i">
+                <fa-icon [icon]="icon_faMinusCircle" *ngIf="personService.form.get('contacts').length>1"
+                  class="float-right " style="color:rgb(238, 121, 121)" (click)="personService.removeContactFromForm(i)"
+                  data-toggle="tooltip" data-placement="top" title="Remove email"></fa-icon>
+                <mat-form-field>
+                  <input matInput placeholder="contact" formControlName="number">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <button *ngIf="personService.person.id == undefined || personService.person.id==0 else updatebutton"
+            mat-stroked-button (click)="register()">Register</button>
+          <ng-template #updatebutton>
+            <button (click)="update()" mat-stroked-button>Update</button>
+          </ng-template>
+          <button (click)="reset()" mat-stroked-button>Reset</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
