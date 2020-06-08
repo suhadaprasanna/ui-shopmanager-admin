@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonServiceService } from 'src/app/service/common-service.service';
 import { ItemServiceService } from 'src/app/service/item-service.service';
 import { ToastrService } from 'ngx-toastr';
-import { Status } from 'src/app/util/Util';
+import { Status, base64ImageToBlob } from 'src/app/util/Util';
 import { Item } from 'src/app/model/object/Object';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { ResponseReader } from 'src/app/service/ResponseReader';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-item-add',
@@ -17,6 +18,9 @@ export class ItemAddComponent implements OnInit {
   newItemList: Item[] = [];
   selectedItemId = "";
   selectedItemCode = "";
+
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
 
   constructor(
     private commonService: CommonServiceService,
@@ -49,7 +53,6 @@ export class ItemAddComponent implements OnInit {
       );
     }
     this.itemService.buidForm();
-    console.log(this.itemService.item)
   }
 
   add() {
@@ -66,6 +69,9 @@ export class ItemAddComponent implements OnInit {
             }else{
               this.resReader.defaultRead(res);
             }
+          },
+          (err)=>{
+            this.itemService.isProcessing = false;
           });
       } else {
         this.toastr.warning("Invalid Form", "Warning", {
@@ -97,6 +103,32 @@ export class ItemAddComponent implements OnInit {
         timeOut: 4000
       })
     }
+  }
+
+  fileChangeEvent(event: any): void {
+    this.imageChangedEvent = event;
+  }
+  imageCropped(event: ImageCroppedEvent) {
+    console.log(event)
+    this.croppedImage = event.base64;
+    //this.itemService.image_file = base64ImageToBlob(this.croppedImage);
+    console.log(this.imageChangedEvent);
+    let value = this.imageChangedEvent.target.value;
+    let filename = value.substring((value.lastIndexOf("\\")+1),value.length).split(".");
+    this.itemService.image_file = new File(
+      [base64ImageToBlob(this.croppedImage)], 
+      (filename[0]+"."+filename[1]), 
+      {type: (`image/`+filename[1])}
+    );
+  }
+  imageLoaded() {
+    //console.log("image loaded")
+  }
+  cropperReady() {
+    //console.log("crop ready")
+  }
+  loadImageFailed() {
+    //console.log("image load failed")
   }
 
 }

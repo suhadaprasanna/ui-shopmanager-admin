@@ -27,7 +27,8 @@ export class ItemListComponent implements OnInit {
     this.itemService.filterForm = new ItemFilterForm();
     this.itemService.filterForm.count = 10;
     this.itemService.filterForm.status = "ALL";
-    this.getItems();
+    if(this.itemList == null || this.itemList == undefined || this.itemList.length <= 0)
+      this.getItems();
   }
 
   getItems(){
@@ -35,6 +36,7 @@ export class ItemListComponent implements OnInit {
       (res)=>{
         if(res["status"]==Status.success){
           this.itemList = res["outputs"]["list"];
+          
           this.itemService.filterForm.page_count = res["outputs"]["page_count"];
           this.itemService.filterForm.total_count = res["outputs"]["total_count"];
         }else{

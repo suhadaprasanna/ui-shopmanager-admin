@@ -31,13 +31,36 @@
                 <input matInput placeholder="{{commonService.label_list.barcode}}" formControlName="barcode">
               </mat-form-field>
 
-              <div class="custom-file" >
-                <input type="file" class="custom-file-input" id="customFile" formControlName="image_path"
-                  (change)="itemService.onFileChange($event)">
-                <label class="custom-file-label" for="customFile">Choose Image</label>
+              <div class="form-group" >
+                <label for="selectimage">Select Image</label>
+                <input type="file" class="form-control-file" id="selectimage" name="image_file" (change)="fileChangeEvent($event)" >
               </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <image-cropper
+                  [imageChangedEvent]="imageChangedEvent"
+                  [maintainAspectRatio]="true"
+                  [aspectRatio]="1 / 1"
+                  format="png,jpg,jpeg"
+                  maintainAspectRatio="true"
+                  (imageCropped)="imageCropped($event)"
+                  (imageLoaded)="imageLoaded()"
+                  (cropperReady)="cropperReady()"
+                  (loadImageFailed)="loadImageFailed()"
+                  style="max-width: 100%"
+                  class="border border-primary"
+                  ></image-cropper>
+                </div>
+                <div class="col-6">
+                  <img class="border border-danger" [src]="croppedImage" style="max-width: 100%" />
+                </div>
+              </div>
+
               <br><br>
-              <div style="overflow: auto;">
+
+
+              <div style="overflow: auto;" class="float-right">
                 <button *ngIf="itemService.item.id==null || itemService.item.id==undefined || itemService.item.id==0; else updatebutton" (click)="add()"
                   [disabled]="itemService.isProcessing" mat-raised-button
                   color="primary">{{commonService.label_list.add}}</button>

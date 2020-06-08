@@ -40,3 +40,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-form-field.full{
     width: 100%;
 }
+
+app-tree-node-view{
+    font-size: 16px;
+    display: block;
+    padding: 4px 8px;
+    border-bottom: solid 0.5px rgba(187, 187, 187, 0.5);
+}
+.tree-actions{
+    color: rgb(199, 199, 199);
+    font-size: 13px;
+    border: solid 0.5px rgba(199, 199, 199, 0.5);
+    padding: 4px 8px;
+}
+.tree-actions:hover{
+    color: rgb(28, 28, 28);
+    border: solid 0.5px rgba(28, 28, 28, 0.5);
+}

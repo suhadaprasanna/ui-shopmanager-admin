@@ -24,6 +24,10 @@ import { ItemManageComponent } from './component/item-manage/item-manage.compone
 import { ItemAddComponent } from './component/item-add/item-add.component';
 import { ItemListComponent } from './component/item-list/item-list.component';
 import { ItemViewComponent } from './component/item-view/item-view.component';
+import { ItemCategoryComponent } from './component/item-category/item-category.component';
+import { ItemCategoryAddComponent } from './component/item-category-add/item-category-add.component';
+import { TreeNodeViewComponent } from './component/plugin/tree/tree-node-view/tree-node-view.component';
+import { TreeViewComponent } from './component/plugin/tree/tree-view/tree-view.component';
 
 
 const routes: Routes = [
@@ -73,7 +77,8 @@ const routes: Routes = [
     children:[
       {path:"add",component:ItemAddComponent},
       {path:"list",component:ItemListComponent},
-      {path:"view",component:ItemViewComponent}
+      {path:"view",component:ItemViewComponent},
+      {path:"category",component:ItemCategoryComponent}
     ],
     canActivate:[AuthGuardService]
   },
@@ -102,8 +107,9 @@ export const RoutingComponents = [
   PersonManageComponent,PersonListComponent,PersonViewComponent,
   RegisterComponent,PersonRegisterComponent,ShopRegisterComponent,FullRegisterComponent,
   SetupManageComponent,SetupEmployeeRoleComponent,
-  ItemManageComponent,ItemAddComponent,ItemListComponent,ItemViewComponent,
+  ItemManageComponent,ItemAddComponent,ItemListComponent,ItemViewComponent,ItemCategoryComponent,ItemCategoryAddComponent,
   PageNotFoundComponent,
   DialogComponent,BottomSheetComponent,
+  TreeNodeViewComponent,TreeViewComponent,
   HttpConnectionErrorComponent
 ]

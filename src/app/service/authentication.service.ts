@@ -56,7 +56,8 @@ export class AuthenticationService {
     });
     let formData = new FormData();
     formData = convertJsontoFormData(credentials,null,formData);
-    this.httpClient.post(APILink.authAPIURL+APILink.authGetToken,formData,headers).subscribe(res=>{
+    this.httpClient.post(APILink.authAPIURL+APILink.authGetToken,formData,headers).subscribe(
+      res=>{
       localStorage.setItem("token",res["access_token"]);
       localStorage.setItem("token_type",res["token_type"]);
       localStorage.setItem("refresh_token",res["refresh_token"]);
@@ -65,6 +66,10 @@ export class AuthenticationService {
       this.isAuthenticated = true;
       this.isProcessing = false;
       this.login();
+    },
+    (err)=>{
+      this.isAuthenticated = false;
+      this.isProcessing = false;
     });
   }
 

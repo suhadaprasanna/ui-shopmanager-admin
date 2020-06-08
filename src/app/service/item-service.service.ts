@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Item } from '../model/object/Object';
 import { ToastrService } from 'ngx-toastr';
@@ -19,6 +19,9 @@ export class ItemServiceService {
   isProcessing:boolean = false;
   filterForm:ItemFilterForm;
 
+  image_file:any=null;
+  image_path:String="";
+
   constructor(
     private formBuilder:FormBuilder,
     private toastr:ToastrService,
@@ -38,20 +41,8 @@ export class ItemServiceService {
       code:[this.item.code,[Validators.required],isItemCodeExist(this)],
       barcode:[this.item.barcode],
       status:[this.item.status],
-      image_path:[this.item.image_path],
-      image_file:[''],
       sys_add_date:[getDate(this.item.sys_add_date,"YMD","-")]
     });
-  }
-
-  onFileChange(event) {
-    console.log(event)
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.form.patchValue({
-        image_file: file
-      });
-    }
   }
 
   setItem(item:Item){
@@ -72,7 +63,9 @@ export class ItemServiceService {
       authorization:"token"
     });
     let _form = convertJsontoFormData(this.form.value,null,null);
-    return this.httpClient.post(APILink.itemAPIURL + "/item/add", _form,headers);
+    _form.append("image_file",this.image_file); // adding image
+    //return this.httpClient.post(APILink.itemAPIURL + "/item/add", _form,headers);
+    return this.httpClient.post(APILink.itemAPIURL + "/test/fileup", _form,headers);
   }
 
   update(){

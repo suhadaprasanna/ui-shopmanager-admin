@@ -17,7 +17,16 @@
             </mat-error>
           </mat-form-field>
           <br>
-          <button mat-raised-button class="float-right" color="primary" [disabled]="authService.isProcessing" (click)="login()">Login</button>
+          <div class="form-row">
+            <div class="col-md-6">
+              <div *ngIf="authService.isProcessing" class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <button mat-raised-button class="float-right" color="primary" [disabled]="authService.isProcessing" (click)="login()">Login</button>
+            </div>
+          </div>
         </form>
       </mat-card>
     </div>

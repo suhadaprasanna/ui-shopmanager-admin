@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-12">
+
+    <div class="card" style="width: 50rem;">
+      <div class="card-body">
+
+        <span type="button" class="btn btn-link" (click)="addCategory(null)" >
+          Click to add main category
+        </span>
+
+        <app-tree-view>
+          <app-tree-node-view *ngFor="let node of treeList" [node]="node">
+            {{node.name}}
+            &nbsp;
+            <span class="tree-actions rounded rounded-pill float-right" >
+              <span class="custom-control custom-switch" style="display:inline" matTooltip="Click to {{node.status=='Y'?'disable':'enable'}} category for {{node.name}}">
+                <input type="checkbox" class="custom-control-input" id="customSwitch{{node.object.id}}" checked="{{node.status=='Y'?true:false}}" (change)="categoryEnableDisable($event,node.object)">
+                <label class="custom-control-label" for="customSwitch{{node.object.id}}"></label>
+              </span>
+              <fa-icon [icon]="icon_faPlus" (click)="addCategory(node.object)" matTooltip="Click to add sub category for {{node.name}}"></fa-icon>
+            </span>
+          </app-tree-node-view>
+        </app-tree-view>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { HttpInterceptorService } from './service/http-interceptor.service';
 import { CookieService } from 'ngx-cookie-service';
 import { DialogComponent } from './component/plugin/dialog/dialog.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { ItemCategoryAddComponent } from './component/item-category-add/item-category-add.component';
 
 @NgModule({
   declarations: [
@@ -28,10 +30,12 @@ import { DialogComponent } from './component/plugin/dialog/dialog.component';
     FormsModule,ReactiveFormsModule,
     FontAwesomeModule,
     HttpClientModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    ImageCropperModule
   ],
   entryComponents: [
-    DialogComponent
+    DialogComponent,
+    ItemCategoryAddComponent
   ],
   providers: [
     {

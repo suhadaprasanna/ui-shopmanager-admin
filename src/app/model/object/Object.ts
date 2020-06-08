@@ -127,6 +127,30 @@ export class Item {
     barcode:String;
     status:String;
     image_path:String;
+    image_paths:String[];
     image_file:File;
     sys_add_date:Date;
+}
+
+export class ItemImage {
+    id:Number;
+    image_name:String;
+    priority:Number;
+    status:String;
+    item:Item;
+}
+export class Category {
+    id:Number;
+    name:String;
+    code:String;
+    parent_category:Number=-1;
+    sub_category:Category[];
+    status:String="Y";
+}
+
+export class ItemCategory {
+    id:Number;
+    category:Category;
+    item:Item;
+    status:String;
 }
