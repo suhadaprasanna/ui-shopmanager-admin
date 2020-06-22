@@ -8,6 +8,7 @@ export class TreeNode {
   parentId:Number;
   isExpand:boolean;
   status:String;
+  isSelected:boolean;
 }
 
 @Component({

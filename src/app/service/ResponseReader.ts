@@ -12,6 +12,7 @@ export class ResponseReader {
     ){}
 
     public defaultRead(res:any){
+        console.log(res);
         let status = res.status;
         if(status==Status.NA){
             this.toastr.error("Did not recevive valid response","Response Error");

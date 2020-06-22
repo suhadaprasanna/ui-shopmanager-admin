@@ -1,5 +1,5 @@
 import { Injectable, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { Item } from '../model/object/Object';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
@@ -7,7 +7,7 @@ import { getHeaders, APILink } from '../util/APIManage';
 import { convertJsontoFormData } from '../model/form/FormUtil';
 import { isItemCodeExist, isItemNameExist } from '../util/validators/AsyncValidator';
 import { getDate } from '../util/Util';
-import { ItemFilterForm } from '../model/form/Form';
+import { ItemForm } from '../model/form/Form';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class ItemServiceService {
   form:FormGroup;
   item:Item;
   isProcessing:boolean = false;
-  filterForm:ItemFilterForm;
+  filterForm:ItemForm;
 
   image_file:any=null;
   image_path:String="";
@@ -41,8 +41,25 @@ export class ItemServiceService {
       code:[this.item.code,[Validators.required],isItemCodeExist(this)],
       barcode:[this.item.barcode],
       status:[this.item.status],
-      sys_add_date:[getDate(this.item.sys_add_date,"YMD","-")]
+      sys_add_date:[getDate(this.item.sys_add_date,"YMD","-")],
+      category_list:this.formBuilder.array([])
     });
+  }
+
+  onChangeCategoryItemList(e,node){
+    const checkArray: FormArray = this.form.get('category_list') as FormArray;
+    if (e.target.checked) {
+      checkArray.push(new FormControl(node.object.id));
+    } else {
+      let i: number = 0;
+      checkArray.controls.forEach((item: FormControl) => {
+        if (item.value == node.object.id) {
+          checkArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
   }
 
   setItem(item:Item){
@@ -64,8 +81,7 @@ export class ItemServiceService {
     });
     let _form = convertJsontoFormData(this.form.value,null,null);
     _form.append("image_file",this.image_file); // adding image
-    //return this.httpClient.post(APILink.itemAPIURL + "/item/add", _form,headers);
-    return this.httpClient.post(APILink.itemAPIURL + "/test/fileup", _form,headers);
+    return this.httpClient.post(APILink.itemAPIURL + "/item/add", _form,headers);
   }
 
   update(){
@@ -77,7 +93,7 @@ export class ItemServiceService {
     return this.httpClient.post(APILink.itemAPIURL + "/item/update", _form,headers);
   }
 
-  getItems(form:ItemFilterForm){
+  getItems(form:ItemForm){
     let headers = getHeaders({
       authorization:"token"
     })
@@ -85,27 +101,26 @@ export class ItemServiceService {
     return this.httpClient.post(APILink.itemAPIURL+"/item/get",_form,headers);
   }
 
-  getItemByCode(item_code:String){
+  getItemByCode(form:ItemForm){
     let headers = getHeaders({
       authorization:"token"
     })
-    let _form = convertJsontoFormData({"code":item_code},null,null);
+    let _form = convertJsontoFormData(form,null,null);
     return this.httpClient.post(APILink.itemAPIURL+"/item/get/bycode",_form,headers);
   }
 
-  getItemByName(item_name:String){
+  getItemByName(form:ItemForm){
     let headers = getHeaders({
       authorization:"token"
     })
-    let _form = convertJsontoFormData({"name":item_name},null,null);
+    let _form = convertJsontoFormData(form,null,null);
     return this.httpClient.post(APILink.itemAPIURL+"/item/get/byname",_form,headers);
   }
 
-  itemEnableDisable(item_code:String,status:boolean){
+  itemEnableDisable(form:ItemForm){
     let headers = getHeaders({
       authorization:"token"
     });
-    let form = {"code":item_code,"status":(status?"Y":"N")}
     let _form = convertJsontoFormData(form,null,null);
     return this.httpClient.post(APILink.itemAPIURL+"/item/enable_disable",_form,headers);
   }

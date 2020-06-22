@@ -4,7 +4,7 @@ import { ItemServiceService } from 'src/app/service/item-service.service';
 import { Item } from 'src/app/model/object/Object';
 import { Status } from 'src/app/util/Util';
 import { MatSnackBar } from '@angular/material';
-import { ItemFilterForm } from 'src/app/model/form/Form';
+import { ItemForm } from 'src/app/model/form/Form';
 import { faRedo } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -16,6 +16,7 @@ export class ItemListComponent implements OnInit {
   icon_faRedo = faRedo;
 
   itemList:Item[];
+  isLoading:boolean;
   
   constructor(
     private commonService:CommonServiceService,
@@ -24,7 +25,7 @@ export class ItemListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.itemService.filterForm = new ItemFilterForm();
+    this.itemService.filterForm = new ItemForm();
     this.itemService.filterForm.count = 10;
     this.itemService.filterForm.status = "ALL";
     if(this.itemList == null || this.itemList == undefined || this.itemList.length <= 0)
@@ -32,8 +33,10 @@ export class ItemListComponent implements OnInit {
   }
 
   getItems(){
+    this.isLoading = true;
     this.itemService.getItems(this.itemService.filterForm).subscribe(
       (res)=>{
+        this.isLoading = false;
         if(res["status"]==Status.success){
           this.itemList = res["outputs"]["list"];
           
@@ -50,8 +53,14 @@ export class ItemListComponent implements OnInit {
   }
 
   itemEnableDisable(event:any,item_code){
-    this.itemService.itemEnableDisable(item_code,event.target.checked).subscribe(
+    this.isLoading = true;
+    
+    let form = new ItemForm();
+    form.code = item_code;
+    form.status = (event.target.checked?"Y":"N");
+    this.itemService.itemEnableDisable(form).subscribe(
       (res)=>{
+        this.isLoading = false;
         if(res["status"]==Status.success){
           let updated_item = res["outputs"]["item"];
           if(updated_item != null && updated_item != undefined && updated_item != ""){
@@ -69,6 +78,7 @@ export class ItemListComponent implements OnInit {
         }
       },
       (err)=>{
+        this.isLoading = false;
         event.target.checked = false;
       }
     );

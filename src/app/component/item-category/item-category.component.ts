@@ -9,6 +9,9 @@ import { Status, TransferData } from 'src/app/util/Util';
 import { faPlus, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { ItemCategoryAddComponent } from '../item-category-add/item-category-add.component';
 import { TreeNode } from '../plugin/tree/tree-node-view/tree-node-view.component';
+import { ResponseReader } from 'src/app/service/ResponseReader';
+import { ToastrService } from 'ngx-toastr';
+import { CategoryForm } from 'src/app/model/form/Form';
 
 @Component({
   selector: 'app-item-category',
@@ -21,47 +24,38 @@ export class ItemCategoryComponent implements OnInit {
   
   treeList:TreeNode[]=[];
   categoryList:Category[]=[];
+  resReader = new ResponseReader(this.toastr);
+  isLoading:boolean=false;
 
   constructor(
     public dialog: MatDialog,
-    private itemCategoryService: ItemCategoryService
+    private itemCategoryService: ItemCategoryService,
+    private toastr:ToastrService
   ) {}
 
   ngOnInit() {
-    // this.categoryList = [
-    //   {id:1,name:"A",status:"Y",code:"A",parent_category:0,sub_category:[]},
-    //   {id:2,name:"B",status:"Y",code:"B",parent_category:0,
-    //   sub_category:[
-    //     {id:4,name:"B1",status:"Y",code:"B1",parent_category:2,sub_category:[]},
-    //     {id:5,name:"B2",status:"Y",code:"B2",parent_category:2,
-    //     sub_category:[
-    //       {id:6,name:"B21",status:"Y",code:"B21",parent_category:5,sub_category:[]},
-    //     ]},
-    //   ]},
-    //   {id:3,name:"C",status:"Y",code:"C",parent_category:0,
-    //   sub_category:[
-    //     {id:7,name:"C1",status:"Y",code:"C1",parent_category:3,
-    //     sub_category:[
-    //       {id:8,name:"C11",status:"Y",code:"C11",parent_category:7,sub_category:[]},
-    //       {id:9,name:"C12",status:"Y",code:"C12",parent_category:7,sub_category:[]},
-    //     ]},
-    //   ]},
-    // ]
-    this.getCategories(0);
-    this.treeList=this.createTreeList(this.categoryList,0,null);
+    this.getCategoriesByParent(0);
+    this.treeList=this.itemCategoryService.createTreeList(this.categoryList,0,null);
   }
 
-  getCategories(id){
-    this.itemCategoryService.getCategories(id).subscribe((res:TransferData)=>{
+  getCategoriesByParent(parent_id){
+    this.isLoading = true;
+    let form = new CategoryForm();
+    form.parent_category = parent_id;
+    form.withSubCategories = true;
+    this.itemCategoryService.getCategoriesByParent(form).subscribe((res:TransferData)=>{
+      this.isLoading = false;
       if(res.status != undefined && res.status==Status.success){
         this.categoryList = res.outputs["list"];
+        this.treeList=this.itemCategoryService.createTreeList(this.categoryList,0,null);
       }else{
-
+        this.resReader.defaultRead(res);
       }
     });
   }
 
   addCategory(parent_category){
+    this.isLoading = true;
     let dialogRef = this.dialog.open(ItemCategoryAddComponent, {
       height: '350px',
       width: '300px',
@@ -71,7 +65,34 @@ export class ItemCategoryComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(
       res=>{
-        console.log(res);
+        this.isLoading = false;
+        if(res != undefined){
+          if(res.action == "success"){
+            this.getCategoriesByParent(0);
+            this.treeList=this.itemCategoryService.createTreeList(this.categoryList,0,null);
+          }
+        }
+      });
+  }
+
+  updateCategory(category){
+    this.isLoading = true;
+    let dialogRef = this.dialog.open(ItemCategoryAddComponent, {
+      height: '350px',
+      width: '300px',
+      data:{
+        category:category
+      }
+    });
+    dialogRef.afterClosed().subscribe(
+      res=>{
+        this.isLoading = false;
+        if(res != undefined){
+          if(res.action == "success"){
+            this.getCategoriesByParent(0);
+            this.treeList=this.itemCategoryService.createTreeList(this.categoryList,0,null);
+          }
+        }
       });
   }
 
@@ -83,33 +104,6 @@ export class ItemCategoryComponent implements OnInit {
     }else{
       category.status = "N";
     }
-  }
-
-  createTreeList(list:any[],level:number,parent:any){
-    if(level<=0)
-      level =1;
-    let treelist:TreeNode[] = [];
-    list.forEach(element => {
-      let ele:Category = element;
-      let node = new TreeNode();
-      node.level = level;
-      node.object = ele;
-      node.name = ele.name;
-      node.status = ele.status;
-      // set parent's ID
-      if(parent != null){
-        node.parentId = parent.id;
-      }
-      // checking sub objects
-      if(ele.sub_category != null && ele.sub_category.length>0){
-        node.hasChildren = true;
-        treelist.push(node);
-        treelist = treelist.concat(this.createTreeList(ele.sub_category,(level+1),ele));
-      }else{
-        treelist.push(node);
-      }
-    });
-    return treelist;
   }
 
 }

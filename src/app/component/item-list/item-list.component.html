@@ -1,9 +1,6 @@
 <div class="row">
   <div class="col-12">
-
-    <div class="row">
-      <div class="col-12 ">
-
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
         <div class="card" style="width: 50rem;">
           <div class="card-body">
             <!-- start item filter list-->
@@ -107,7 +104,5 @@
           </div>
         </div>
 
-      </div>
-    </div>
   </div>
 </div>

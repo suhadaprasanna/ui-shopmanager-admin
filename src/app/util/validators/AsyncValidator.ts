@@ -3,10 +3,13 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { Status } from '../Util';
 import { map } from 'rxjs/operators';
 import { ItemCategoryService } from 'src/app/service/item-category.service';
+import { CategoryForm, ItemForm } from 'src/app/model/form/Form';
 
 export const isItemCodeExist = (itemService: ItemServiceService) => {
     return (control: AbstractControl) => {
-        return itemService.getItemByCode(control.value).pipe(
+        let form = new ItemForm();
+        form.code = control.value;
+        return itemService.getItemByCode(form).pipe(
             map(
                 (res) => {
                     if (itemService.item.id==0 && res["status"] == Status.success) {
@@ -24,7 +27,9 @@ export const isItemCodeExist = (itemService: ItemServiceService) => {
 
 export const isItemNameExist = (itemService: ItemServiceService) => {
     return (control: AbstractControl) => {
-        return itemService.getItemByName(control.value).pipe(
+        let form = new ItemForm();
+        form.name = control.value;
+        return itemService.getItemByName(form).pipe(
             map(
                 (res) => {
                     if (itemService.item.id==0 && res["status"] == Status.success) {
@@ -42,7 +47,9 @@ export const isItemNameExist = (itemService: ItemServiceService) => {
 
 export const isCategoryNameExist = (itemCategoryService: ItemCategoryService) => {
     return (control: AbstractControl) => {
-        return itemCategoryService.getCategoryByName(control.value).pipe(
+        let form = new CategoryForm();
+        form.name = control.value;
+        return itemCategoryService.getCategoryByName(form).pipe(
             map(
                 (res) => {
                     if (itemCategoryService.category.id==0 && res["status"] == Status.success) {
@@ -60,7 +67,9 @@ export const isCategoryNameExist = (itemCategoryService: ItemCategoryService) =>
 
 export const isCategoryCodeExist = (itemCategoryService: ItemCategoryService) => {
     return (control: AbstractControl) => {
-        return itemCategoryService.getCategoryByCode(control.value).pipe(
+        let form = new CategoryForm();
+        form.code = control.value;
+        return itemCategoryService.getCategoryByCode(form).pipe(
             map(
                 (res) => {
                     if (itemCategoryService.category.id==0 && res["status"] == Status.success) {

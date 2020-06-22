@@ -1,5 +1,5 @@
 
-export class ItemFilterForm {
+export class ItemForm {
     name:String;
     code:String;
     barcode:String;
@@ -56,4 +56,13 @@ export class ShopFilterForm {
         this.page = page;
         return true;
     }
+}
+
+export class CategoryForm{
+    id:Number;
+    name:String;
+    code:String;
+    parent_category:Number;
+    status:String;
+    withSubCategories:boolean;
 }

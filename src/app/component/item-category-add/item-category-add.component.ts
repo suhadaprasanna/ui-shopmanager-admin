@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ItemCategoryAddComponent implements OnInit {
 
   parent_category:Category;
+  category:Category;
   resReader = new ResponseReader(this.toastr);
   
   constructor(
@@ -23,14 +24,22 @@ export class ItemCategoryAddComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    console.log(this.data)
     if(this.data != null && this.data != undefined){
+
       this.parent_category = this.data.parent_category;
-      this.itemCategoryService.category = new Category();
-      if(this.parent_category != null && this.itemCategoryService.category == null){
-        this.itemCategoryService.category.parent_category = this.parent_category.id;
+      this.category = this.data.category;
+      console.log(this.parent_category)
+      console.log(this.category)
+      if(this.category != null){
+        this.itemCategoryService.category = this.category;
       }else{
-        this.itemCategoryService.category.parent_category = 0;
+        this.itemCategoryService.category = new Category();
+      }
+
+      if(this.parent_category != null){
+        this.itemCategoryService.setParentCategoryId(this.parent_category.id);
+      }else{
+        this.itemCategoryService.setParentCategoryId(0);
       }
     }
     this.itemCategoryService.buidForm();
@@ -59,5 +68,22 @@ export class ItemCategoryAddComponent implements OnInit {
 
       }
     )
+  }
+
+  updateCategory(){
+    this.data.action = "update";
+    this.itemCategoryService.updateCategory().subscribe(
+      (res:TransferData)=>{
+        if(res.status != undefined && res.status==Status.success){
+          if(res.outputs["category"] != undefined && res.outputs["category"] != null){
+            this.data.action = "success";
+            this.data.category = res.outputs["category"];
+            this.dialogRef.close(this.data);
+          }
+        }else{
+          this.resReader.defaultRead(res);
+        }
+      }
+    );
   }
 }

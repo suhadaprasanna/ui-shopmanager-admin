@@ -2,12 +2,15 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonServiceService } from 'src/app/service/common-service.service';
 import { ItemServiceService } from 'src/app/service/item-service.service';
 import { ToastrService } from 'ngx-toastr';
-import { Status, base64ImageToBlob } from 'src/app/util/Util';
-import { Item } from 'src/app/model/object/Object';
+import { Status, base64ImageToBlob, TransferData } from 'src/app/util/Util';
+import { Item, Category } from 'src/app/model/object/Object';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { ResponseReader } from 'src/app/service/ResponseReader';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { TreeNode } from '../plugin/tree/tree-node-view/tree-node-view.component';
+import { ItemCategoryService } from 'src/app/service/item-category.service';
+import { CategoryForm, ItemForm } from 'src/app/model/form/Form';
 
 @Component({
   selector: 'app-item-add',
@@ -18,6 +21,9 @@ export class ItemAddComponent implements OnInit {
   newItemList: Item[] = [];
   selectedItemId = "";
   selectedItemCode = "";
+  panelOpenState = false;
+  treeList:TreeNode[]=[];
+  categoryList:Category[]=[];
 
   imageChangedEvent: any = '';
   croppedImage: any = '';
@@ -25,6 +31,7 @@ export class ItemAddComponent implements OnInit {
   constructor(
     private commonService: CommonServiceService,
     private itemService: ItemServiceService,
+    private itemCategoryService: ItemCategoryService,
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private snackBar: MatSnackBar,
@@ -43,15 +50,9 @@ export class ItemAddComponent implements OnInit {
     });
 
     if (this.selectedItemCode != null && this.selectedItemCode != undefined && this.selectedItemCode != "") {
-      this.itemService.getItemByCode(this.selectedItemCode).subscribe(
-        (res) => {
-          if (res["status"] == Status.success) {
-            this.itemService.item = res["outputs"]["item"];
-            this.itemService.buidForm();
-          }
-        }
-      );
+      this.getItemByCode(this.selectedItemCode);
     }
+    this.loadCategories(0);
     this.itemService.buidForm();
   }
 
@@ -129,6 +130,33 @@ export class ItemAddComponent implements OnInit {
   }
   loadImageFailed() {
     //console.log("image load failed")
+  }
+
+  loadCategories(id){
+    let form =new CategoryForm();
+    form.parent_category = id;
+    form.withSubCategories=true;
+    this.itemCategoryService.getCategoriesByParent(form).subscribe(
+      (res:TransferData)=>{
+        if(res.status ==Status.success){
+          this.categoryList = res.outputs["list"];
+          this.treeList = this.itemCategoryService.createTreeList(this.categoryList,0,null);
+        }
+      }
+    );
+  }
+
+  getItemByCode(code){
+    let form = new ItemForm();
+    form.code = code;
+    this.itemService.getItemByCode(form).subscribe(
+      (res) => {
+        if (res["status"] == Status.success) {
+          this.itemService.item = res["outputs"]["item"];
+          this.itemService.buidForm();
+        }
+      }
+    );
   }
 
 }

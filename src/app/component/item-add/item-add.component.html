@@ -6,71 +6,114 @@
       <div class="col-6">
         <div class="card">
           <div class="card-body">
-            <form [formGroup]="itemService.form" autocomplete="false">
-              <mat-form-field>
-                <input #itemname matInput placeholder="{{commonService.label_list.item_name}}" formControlName="name">
-                <mat-error *ngIf="itemService.form.controls['name'].errors?.required">
-                  {{commonService.label_list.item_name}} <strong>{{commonService.label_list.required}}</strong>
-                </mat-error>
-                <mat-error *ngIf="itemService.form.controls['name'].errors?.isItemNameExist">
-                  {{commonService.label_list.item_name}} <strong>{{commonService.label_list.already_exist}}</strong>
-                </mat-error>
-              </mat-form-field>
-              <br>
-              <mat-form-field>
-                <input #itemcode matInput placeholder="{{commonService.label_list.item_code}}" formControlName="code">
-                <mat-error *ngIf="itemService.form.controls['code'].errors?.required">
-                  {{commonService.label_list.item_code}} <strong>{{commonService.label_list.required}}</strong>
-                </mat-error>
-                <mat-error *ngIf="itemService.form.controls['code'].errors?.isItemCodeExist">
-                  {{commonService.label_list.item_code}} <strong>{{commonService.label_list.already_exist}}</strong>
-                </mat-error>
-              </mat-form-field>
-              <br>
-              <mat-form-field>
-                <input matInput placeholder="{{commonService.label_list.barcode}}" formControlName="barcode">
-              </mat-form-field>
 
-              <div class="form-group" >
-                <label for="selectimage">Select Image</label>
-                <input type="file" class="form-control-file" id="selectimage" name="image_file" (change)="fileChangeEvent($event)" >
-              </div>
+            <mat-accordion>
+              <!-- Item details section -->
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Item Details
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    Enter Item Details
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <form [formGroup]="itemService.form" autocomplete="false">
+                  <div>
+                    <mat-form-field>
+                      <input #itemname matInput placeholder="{{commonService.label_list.item_name}}"
+                        formControlName="name">
+                      <mat-error *ngIf="itemService.form.controls['name'].errors?.required">
+                        {{commonService.label_list.item_name}} <strong>{{commonService.label_list.required}}</strong>
+                      </mat-error>
+                      <mat-error *ngIf="itemService.form.controls['name'].errors?.isItemNameExist">
+                        {{commonService.label_list.item_name}}
+                        <strong>{{commonService.label_list.already_exist}}</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
 
-              <div class="row">
-                <div class="col-6">
-                  <image-cropper
-                  [imageChangedEvent]="imageChangedEvent"
-                  [maintainAspectRatio]="true"
-                  [aspectRatio]="1 / 1"
-                  format="png,jpg,jpeg"
-                  maintainAspectRatio="true"
-                  (imageCropped)="imageCropped($event)"
-                  (imageLoaded)="imageLoaded()"
-                  (cropperReady)="cropperReady()"
-                  (loadImageFailed)="loadImageFailed()"
-                  style="max-width: 100%"
-                  class="border border-primary"
-                  ></image-cropper>
+                  <div>
+                    <mat-form-field>
+                      <input #itemcode matInput placeholder="{{commonService.label_list.item_code}}"
+                        formControlName="code">
+                      <mat-error *ngIf="itemService.form.controls['code'].errors?.required">
+                        {{commonService.label_list.item_code}} <strong>{{commonService.label_list.required}}</strong>
+                      </mat-error>
+                      <mat-error *ngIf="itemService.form.controls['code'].errors?.isItemCodeExist">
+                        {{commonService.label_list.item_code}}
+                        <strong>{{commonService.label_list.already_exist}}</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <mat-form-field>
+                      <input matInput placeholder="{{commonService.label_list.barcode}}" formControlName="barcode">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="selectimage">Select Image</label>
+                    <input type="file" class="form-control-file" id="selectimage" name="image_file"
+                      (change)="fileChangeEvent($event)">
+                  </div>
+
+                  <div class="row">
+                    <div class="col-6">
+                      <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+                        [aspectRatio]="1 / 1" format="png,jpg,jpeg" maintainAspectRatio="true"
+                        (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+                        (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()" style="max-width: 100%"
+                        class="border border-primary">
+                      </image-cropper>
+                    </div>
+                    <div class="col-6">
+                      <img class="border border-danger" [src]="croppedImage" style="max-width: 100%" />
+                    </div>
+                  </div>
+                </form>
+              </mat-expansion-panel>
+              <!-- --------------------------------- -->
+              <!-- category section -->
+              <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Category Details
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    Select Category
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div>
+                  <app-tree-view>
+                    <app-tree-node-view *ngFor="let node of treeList" [node]="node">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" 
+                        class="custom-control-input" 
+                        id="customCheck{{node.object.id}}" 
+                        (change)="itemService.onChangeCategoryItemList($event,node)" 
+                        checked="{{node.isSelected}}" 
+                        value="{{node.object.id}}">
+                        <label class="custom-control-label" for="customCheck{{node.object.id}}">{{node.name}}</label>
+                      </div>
+                    </app-tree-node-view>
+                  </app-tree-view>
                 </div>
-                <div class="col-6">
-                  <img class="border border-danger" [src]="croppedImage" style="max-width: 100%" />
-                </div>
-              </div>
+              </mat-expansion-panel>
+              <!-- --------------------------------- -->
+            </mat-accordion>
 
-              <br><br>
-
-
-              <div style="overflow: auto;" class="float-right">
-                <button *ngIf="itemService.item.id==null || itemService.item.id==undefined || itemService.item.id==0; else updatebutton" (click)="add()"
-                  [disabled]="itemService.isProcessing" mat-raised-button
-                  color="primary">{{commonService.label_list.add}}</button>
-                <ng-template #updatebutton>
-                  <button (click)="update()" [disabled]="itemService.isProcessing" mat-raised-button
-                    color="primary">{{commonService.label_list.update}}</button>
-                </ng-template>
-              </div>
-
-            </form>
+            <div style="overflow: auto;" class="float-right">
+              <button
+                *ngIf="itemService.item.id==null || itemService.item.id==undefined || itemService.item.id==0; else updatebutton"
+                (click)="add()" [disabled]="itemService.isProcessing" mat-raised-button
+                color="primary">{{commonService.label_list.add}}</button>
+              <ng-template #updatebutton>
+                <button (click)="update()" [disabled]="itemService.isProcessing" mat-raised-button
+                  color="primary">{{commonService.label_list.update}}</button>
+              </ng-template>
+            </div>
           </div>
         </div>
       </div>

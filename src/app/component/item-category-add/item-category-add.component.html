@@ -36,7 +36,10 @@
         <input type="hidden" formControlName="parent_category">
         <div mat-dialog-actions>
           <button mat-button (click)="onCancel()">Cancel</button>
-          <button mat-button (click)="addCategory()" cdkFocusInitial>Add</button>
+          <button *ngIf="itemCategoryService.category.id <=0 else catupdatebtn" mat-button (click)="addCategory()" cdkFocusInitial>Add</button>
+          <ng-template #catupdatebtn>
+            <button mat-button (click)="updateCategory()" cdkFocusInitial>Update</button>
+          </ng-template>
         </div>
       </form>
     </div>

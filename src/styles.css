@@ -5,6 +5,10 @@ body{
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.page-end{
+    width: 100%;
+    min-height: 10px;
+}
 .lbl-success{
     padding: 3px 5px;
     background-color: rgb(143, 238, 163);
@@ -56,4 +60,25 @@ app-tree-node-view{
 .tree-actions:hover{
     color: rgb(28, 28, 28);
     border: solid 0.5px rgba(28, 28, 28, 0.5);
+}
+.cursor-hand{
+    cursor: pointer;
+}
+.tooltip-red {
+    background: #b71c1c;
+}
+.tooltip-blue {
+    background: #2673e6;
+}
+.tooltip-green {
+    background: #1dd144;
+}
+.tooltip-black {
+    background: #1f2020;
+}
+.tooltip-orange {
+    background: #e27d2a;
+}
+.tooltip-yellow {
+    background: #f3f035;
 }
